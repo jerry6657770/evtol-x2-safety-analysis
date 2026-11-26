@@ -5,7 +5,6 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>作业二 · 旅航者X2 全方位安全分析</title>
-
 <style>
   :root{
     --red:#C82423; --red-dark:#8E1615; --bg:#F7F5F5; --card:#FFFFFF;
@@ -63,6 +62,12 @@
   .summary p{color:var(--ink)}
   .meta{font-size:13px;color:var(--sub);text-align:center;padding:24px 0 10px}
 
+
+  .tbl{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:14px 0}
+  .tbl table{margin:0}
+  @media(max-width:760px){
+    .tbl table{min-width:540px}
+  }
   @media(max-width:760px){
     .hero img{height:300px}
     .hero h1{font-size:23px}
@@ -107,18 +112,18 @@
 <!-- 危险源识别 -->
 <section id="hazard">
 <h2>二、子系统危险源识别</h2>
-<table>
+<div class="tbl"><table>
 <tr><th>子系统</th><th>主要危险源 / 失效来源</th><th>可能后果</th></tr>
 <tr><td>动力与电池系统</td><td>电芯短路、电池热失控、单包失效、供电线路断路；低温环境电池功率骤降；过充过放。</td><td>动力丧失、起火、迫降</td></tr>
 <tr><td>飞控与感知系统</td><td>飞控计算机死机、传感器失效；雷达 / 视觉被强光、浓雾、雨雪干扰；通信链路中断。</td><td>姿态失控、避障失效、误判</td></tr>
 <tr><td>旋翼与机械结构</td><td>电机故障、螺旋桨损伤或断裂、机臂连接疲劳、振动导致紧固件松脱。</td><td>推力失衡、结构解体</td></tr>
 <tr><td>运行环境与人因</td><td>低空乱流、鸟类撞击、起降场地异物；飞行员误操作；与其他航空器空域冲突。</td><td>碰撞、迫降、次生事故</td></tr>
-</table>
+</table></div>
 </section>
 <!-- FMEA -->
 <section id="fmea">
 <h2>三、故障模式与影响分析（FMEA）</h2>
-<table>
+<div class="tbl"><table>
 <tr><th>故障模式</th><th>触发原因</th><th>影响后果</th><th>现有 / 建议防护</th></tr>
 <tr><td>单电机 / 螺旋桨失效</td><td>电机过载、器件老化、桨叶损伤</td><td>单侧推力下降，姿态需重新配平</td><td>多旋翼分布式布局，剩余动力维持可控降落；故障隔离与快速姿态修正</td></tr>
 <tr><td>电池热失控</td><td>内部短路、挤压碰撞、高温老化</td><td>起火、断电，威胁乘员安全</td><td>电池包隔热与泄压设计、热蔓延抑制；监测电芯温度与电压异常</td></tr>
@@ -126,13 +131,13 @@
 <tr><td>感知避障失效</td><td>气象遮挡、传感器脏污、算法误判</td><td>无法及时发现障碍物</td><td>多模态感知融合；限定飞行气象条件；人工接管与监控兜底</td></tr>
 <tr><td>结构连接松脱</td><td>长期振动、疲劳裂纹、装配缺陷</td><td>机臂 / 部件脱落风险</td><td>定期检修与疲劳检测；结构件寿命管理；关键部位冗余连接</td></tr>
 <tr><td>通信链路中断</td><td>信号遮挡、干扰、设备故障</td><td>地面监控 / 遥控指令中断</td><td>机上自主飞行兜底；失联后自动返航或指定区域迫降</td></tr>
-</table>
+</table></div>
 </section>
 <!-- 风险评估 -->
 <section id="risk">
 <h2>四、风险等级评估</h2>
 <p>综合事故严重度与发生可能性，将主要风险划分为高、中、低三级，分级匹配管控资源。</p>
-<table>
+<div class="tbl"><table>
 <tr><th>风险项</th><th>等级</th><th>评估说明</th></tr>
 <tr><td>电池热失控 / 起火</td><td><span class="badge b-high">高风险</span></td><td>后果严重，须作为首要安全项目进行设计与监测管控。</td></tr>
 <tr><td>多电机连锁失效</td><td><span class="badge b-high">高风险</span></td><td>可能导致整体动力丧失，依赖冗余设计与应急降落能力。</td></tr>
@@ -140,7 +145,7 @@
 <tr><td>起降场地失效 / 异物</td><td><span class="badge b-mid">中风险</span></td><td>可通过场地勘察、净空检查与起降规范降低概率。</td></tr>
 <tr><td>单传感器失效</td><td><span class="badge b-mid">中风险</span></td><td>冗余感知可补偿，需防止多传感器同源失效。</td></tr>
 <tr><td>轻微气流颠簸 / 小异物碰撞</td><td><span class="badge b-low">低风险</span></td><td>在设计包线内可承受，常规监控即可。</td></tr>
-</table>
+</table></div>
 <h3>风险分布示意</h3>
 <div class="risk-bar">
 <span style="width:50%;background:var(--high)"></span>
@@ -185,14 +190,14 @@
 <!-- 改进建议 -->
 <section id="advice">
 <h2>七、安全改进建议</h2>
-<table>
+<div class="tbl"><table>
 <tr><th>方向</th><th>具体建议</th></tr>
 <tr><td>被动安全兜底</td><td>配备整机降落伞，覆盖动力全失等极端工况，作为最后一道防护。</td></tr>
 <tr><td>感知可靠性</td><td>升级多模态融合感知，提升雨、雾、夜间等低能见度环境下的识别能力。</td></tr>
 <tr><td>在线健康诊断</td><td>建立远程实时监控平台，对电池、电机、结构状态进行在线诊断与预警。</td></tr>
 <tr><td>人因与培训</td><td>规范飞行员 / 操作员资质培训，明确应急处置流程与人机接管职责。</td></tr>
 <tr><td>标准与数据</td><td>积累试飞与运行安全数据，完善风险评估与失效案例库，支撑设计迭代。</td></tr>
-</table>
+</table></div>
 </section>
 <!-- 总结 -->
 <section>
