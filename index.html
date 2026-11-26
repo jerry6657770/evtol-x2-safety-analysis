@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+
+<html data-src-ver="588e58aa" lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>作业二 · 旅航者X2 全方位安全分析</title>
+
+<style>
+  :root{
+    --red:#C82423; --red-dark:#8E1615; --bg:#F7F5F5; --card:#FFFFFF;
+    --ink:#23272E; --sub:#5C6470; --line:#EBE3E3;
+    --high:#E8403A; --mid:#FA8C16; --low:#18A058;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:"PingFang SC","Hiragino Sans GB","Noto Sans SC","Microsoft YaHei","Source Han Sans SC",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.75}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+
+  .hero{position:relative;color:#fff;border-radius:0 0 28px 28px;overflow:hidden}
+  .hero img{width:100%;height:420px;object-fit:cover;display:block}
+  .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(80,15,15,.35) 0%,rgba(80,15,15,.85) 100%)}
+  .hero-inner{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:flex-end;padding:40px 22px}
+  .hero-inner .wrap{padding:0}
+  .tag{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);padding:4px 14px;border-radius:20px;font-size:13px;letter-spacing:1px;width:fit-content;margin-bottom:14px}
+  .hero h1{font-size:34px;font-weight:900}
+  .hero p{margin-top:10px;opacity:.92;max-width:660px;font-size:15px}
+
+  .nav{display:flex;flex-wrap:wrap;gap:10px;margin:26px 0}
+  .nav a{text-decoration:none;color:var(--red);background:#fff;border:1px solid var(--line);padding:8px 16px;border-radius:20px;font-size:14px;transition:.2s}
+  .nav a:hover{background:var(--red);color:#fff;border-color:var(--red)}
+
+  section{background:var(--card);border-radius:18px;padding:30px 28px;margin-bottom:24px;box-shadow:0 4px 18px rgba(200,36,35,.06)}
+  h2{font-size:22px;font-weight:700;color:var(--red-dark);display:flex;align-items:center;gap:10px;margin-bottom:18px}
+  h2::before{content:"";width:6px;height:22px;border-radius:4px;background:var(--red)}
+  h3{font-size:16px;margin:16px 0 10px}
+  p{color:var(--sub);margin:8px 0}
+  ul{padding-left:22px;color:var(--sub)}
+  li{margin:6px 0}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14.5px}
+  th,td{border:1px solid var(--line);padding:11px 13px;text-align:left;vertical-align:top}
+  th{background:#FBEDED;color:var(--red-dark);font-weight:600}
+  td{color:var(--ink)}
+
+  .badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:12.5px;color:#fff;font-weight:600}
+  .b-high{background:var(--high)} .b-mid{background:var(--mid)} .b-low{background:var(--low)}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+  .card{border:1px solid var(--line);border-radius:14px;padding:18px}
+  .card h4{font-size:15px;margin-bottom:8px;color:var(--red-dark)}
+
+  .framework{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:14px}
+  .step{background:#FBF6F6;border:1px solid var(--line);border-radius:14px;padding:16px 12px;text-align:center}
+  .step .num{width:34px;height:34px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-weight:700}
+  .step h4{font-size:14px;margin-bottom:4px}
+  .step p{font-size:12.5px;margin:0}
+
+  .risk-bar{height:10px;border-radius:6px;overflow:hidden;display:flex;margin:10px 0}
+  .risk-bar span{display:block;height:100%}
+
+  .summary{background:linear-gradient(135deg,#FBF6F6,#FFF);border:1px solid var(--line);border-radius:16px;padding:22px}
+  .summary p{color:var(--ink)}
+  .meta{font-size:13px;color:var(--sub);text-align:center;padding:24px 0 10px}
+
+  @media(max-width:760px){
+    .hero img{height:300px}
+    .hero h1{font-size:23px}
+    .grid2,.framework{grid-template-columns:1fr 1fr}
+    section{padding:22px 18px}
+  }
+</style>
+<link href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;text y='.9em' font-size='90'&gt;🛩️&lt;/text&gt;&lt;/svg&gt;" rel="icon"/><meta content="小鹏汇天「旅航者 X2」eVTOL 系统安全分析：危险源识别、故障模式分析、风险评估、冗余防护与适航运行安全。" name="description"/><meta content="作业二 · 旅航者X2 全方位安全分析" property="og:title"/><meta content="article" property="og:type"/><meta content="#C82423" name="theme-color"/></head>
+<body>
+<header class="hero">
+<img alt="旅航者X2城市上空飞行" loading="eager" src="assets/hero.jpg"/>
+<div class="hero-inner">
+<div class="wrap">
+<span class="tag">课程作业二 · 全方位安全分析</span>
+<h1>小鹏汇天「旅航者 X2」eVTOL 系统安全分析</h1>
+<p>承接作业一选型对象，按系统安全工程思路，从危险源识别、故障模式分析、风险评估、冗余防护到适航与运行安全，进行全维度深度分析。</p>
+</div>
+</div>
+</header>
+<div class="wrap">
+<nav class="nav">
+<a href="#framework">分析框架</a>
+<a href="#hazard">危险源识别</a>
+<a href="#fmea">故障模式分析</a>
+<a href="#risk">风险评估</a>
+<a href="#redundancy">冗余防护</a>
+<a href="#airworthiness">适航与运行</a>
+<a href="#advice">改进建议</a>
+</nav>
+<!-- 框架 -->
+<section id="framework">
+<h2>一、安全分析框架</h2>
+<p>本报告以系统安全工程方法为主线，将整机安全拆解为「识别 — 分析 — 评估 — 防护 — 监管」五个递进环节，避免只关注单一机载设备，而忽略人因、环境与运行管理层面的风险。</p>
+<div class="framework">
+<div class="step"><div class="num">1</div><h4>危险源识别</h4><p>梳理各子系统潜在危险来源</p></div>
+<div class="step"><div class="num">2</div><h4>故障模式分析</h4><p>分析失效模式与后果（FMEA）</p></div>
+<div class="step"><div class="num">3</div><h4>风险评估</h4><p>按严重度与可能性分级管控</p></div>
+<div class="step"><div class="num">4</div><h4>冗余防护</h4><p>设计冗余与应急处置策略</p></div>
+<div class="step"><div class="num">5</div><h4>适航运行</h4><p>认证、监管与持续安全改进</p></div>
+</div>
+</section>
+<!-- 危险源识别 -->
+<section id="hazard">
+<h2>二、子系统危险源识别</h2>
+<table>
+<tr><th>子系统</th><th>主要危险源 / 失效来源</th><th>可能后果</th></tr>
+<tr><td>动力与电池系统</td><td>电芯短路、电池热失控、单包失效、供电线路断路；低温环境电池功率骤降；过充过放。</td><td>动力丧失、起火、迫降</td></tr>
+<tr><td>飞控与感知系统</td><td>飞控计算机死机、传感器失效；雷达 / 视觉被强光、浓雾、雨雪干扰；通信链路中断。</td><td>姿态失控、避障失效、误判</td></tr>
+<tr><td>旋翼与机械结构</td><td>电机故障、螺旋桨损伤或断裂、机臂连接疲劳、振动导致紧固件松脱。</td><td>推力失衡、结构解体</td></tr>
+<tr><td>运行环境与人因</td><td>低空乱流、鸟类撞击、起降场地异物；飞行员误操作；与其他航空器空域冲突。</td><td>碰撞、迫降、次生事故</td></tr>
+</table>
+</section>
+<!-- FMEA -->
+<section id="fmea">
+<h2>三、故障模式与影响分析（FMEA）</h2>
+<table>
+<tr><th>故障模式</th><th>触发原因</th><th>影响后果</th><th>现有 / 建议防护</th></tr>
+<tr><td>单电机 / 螺旋桨失效</td><td>电机过载、器件老化、桨叶损伤</td><td>单侧推力下降，姿态需重新配平</td><td>多旋翼分布式布局，剩余动力维持可控降落；故障隔离与快速姿态修正</td></tr>
+<tr><td>电池热失控</td><td>内部短路、挤压碰撞、高温老化</td><td>起火、断电，威胁乘员安全</td><td>电池包隔热与泄压设计、热蔓延抑制；监测电芯温度与电压异常</td></tr>
+<tr><td>飞控单元异常</td><td>软硬件故障、电磁干扰</td><td>姿态控制不稳或失去控制</td><td>异构飞控冗余与故障自动切换；进入安全悬停 / 迫降逻辑</td></tr>
+<tr><td>感知避障失效</td><td>气象遮挡、传感器脏污、算法误判</td><td>无法及时发现障碍物</td><td>多模态感知融合；限定飞行气象条件；人工接管与监控兜底</td></tr>
+<tr><td>结构连接松脱</td><td>长期振动、疲劳裂纹、装配缺陷</td><td>机臂 / 部件脱落风险</td><td>定期检修与疲劳检测；结构件寿命管理；关键部位冗余连接</td></tr>
+<tr><td>通信链路中断</td><td>信号遮挡、干扰、设备故障</td><td>地面监控 / 遥控指令中断</td><td>机上自主飞行兜底；失联后自动返航或指定区域迫降</td></tr>
+</table>
+</section>
+<!-- 风险评估 -->
+<section id="risk">
+<h2>四、风险等级评估</h2>
+<p>综合事故严重度与发生可能性，将主要风险划分为高、中、低三级，分级匹配管控资源。</p>
+<table>
+<tr><th>风险项</th><th>等级</th><th>评估说明</th></tr>
+<tr><td>电池热失控 / 起火</td><td><span class="badge b-high">高风险</span></td><td>后果严重，须作为首要安全项目进行设计与监测管控。</td></tr>
+<tr><td>多电机连锁失效</td><td><span class="badge b-high">高风险</span></td><td>可能导致整体动力丧失，依赖冗余设计与应急降落能力。</td></tr>
+<tr><td>强对流 / 恶劣天气飞行</td><td><span class="badge b-high">高风险</span></td><td>超出平台包线，应以气象门槛和禁飞规则严格限制。</td></tr>
+<tr><td>起降场地失效 / 异物</td><td><span class="badge b-mid">中风险</span></td><td>可通过场地勘察、净空检查与起降规范降低概率。</td></tr>
+<tr><td>单传感器失效</td><td><span class="badge b-mid">中风险</span></td><td>冗余感知可补偿，需防止多传感器同源失效。</td></tr>
+<tr><td>轻微气流颠簸 / 小异物碰撞</td><td><span class="badge b-low">低风险</span></td><td>在设计包线内可承受，常规监控即可。</td></tr>
+</table>
+<h3>风险分布示意</h3>
+<div class="risk-bar">
+<span style="width:50%;background:var(--high)"></span>
+<span style="width:30%;background:var(--mid)"></span>
+<span style="width:20%;background:var(--low)"></span>
+</div>
+<p style="font-size:13px">■ 高风险集中在动力 / 电池与极端工况，是安全设计与运行管控的重点。</p>
+</section>
+<!-- 冗余防护 -->
+<section id="redundancy">
+<h2>五、安全冗余与防护设计</h2>
+<div class="grid2">
+<div class="card">
+<h4>动力冗余</h4>
+<p>分布式多电机多桨布局，避免单一动力点成为致命单点；单组失效后由其余动力维持可控飞行与降落。</p>
+</div>
+<div class="card">
+<h4>控制冗余</h4>
+<p>飞控采用多通道 / 异构备份，主系统异常时自动切换；关键指令具备独立通路，降低共因失效概率。</p>
+</div>
+<div class="card">
+<h4>电池安全防护</h4>
+<p>电池包隔热、泄压与热抑制设计，阻断热失控蔓延；实时监测电压、温度与绝缘状态，异常提前预警。</p>
+</div>
+<div class="card">
+<h4>应急策略</h4>
+<p>故障触发自动悬停、一键返航与指定区域迫降逻辑；预留整机降落伞等最后一道兜底防护的设计空间。</p>
+</div>
+</div>
+</section>
+<!-- 适航运行 -->
+<section id="airworthiness">
+<h2>六、适航、法规与运行安全</h2>
+<p>eVTOL 属于航空类产品，安全不仅取决于机载硬件，还依赖认证体系、空域管理与运维规范共同保障：</p>
+<ul>
+<li><strong>适航认证：</strong>需按航空器合格审定要求完成安全性评估、试飞验证与持续适航管理，当前国内 eVTOL 适航体系仍在逐步完善。</li>
+<li><strong>空域与航线：</strong>划定专用低空航线与起降点，建立空中交通监控与冲突避让机制，避免与有人机、鸟类及地面障碍物冲突。</li>
+<li><strong>气象门槛：</strong>明确风速、能见度、降水等飞行限制条件，恶劣天气自动禁飞，严禁超出设计包线运行。</li>
+<li><strong>运维与追溯：</strong>建立定期检修、结构与电池老化检测、故障数据记录与追溯制度，支撑持续安全改进。</li>
+</ul>
+</section>
+<!-- 改进建议 -->
+<section id="advice">
+<h2>七、安全改进建议</h2>
+<table>
+<tr><th>方向</th><th>具体建议</th></tr>
+<tr><td>被动安全兜底</td><td>配备整机降落伞，覆盖动力全失等极端工况，作为最后一道防护。</td></tr>
+<tr><td>感知可靠性</td><td>升级多模态融合感知，提升雨、雾、夜间等低能见度环境下的识别能力。</td></tr>
+<tr><td>在线健康诊断</td><td>建立远程实时监控平台，对电池、电机、结构状态进行在线诊断与预警。</td></tr>
+<tr><td>人因与培训</td><td>规范飞行员 / 操作员资质培训，明确应急处置流程与人机接管职责。</td></tr>
+<tr><td>标准与数据</td><td>积累试飞与运行安全数据，完善风险评估与失效案例库，支撑设计迭代。</td></tr>
+</table>
+</section>
+<!-- 总结 -->
+<section>
+<h2>八、安全分析总结</h2>
+<div class="summary">
+<p>旅航者 X2 通过分布式动力、飞控备份、电池防护与应急降落等冗余设计，规避了多数单点致命故障，平台在限定试飞与试点场景下具备基本安全性。但 eVTOL 的安全是一项系统工程：除机载硬件防护外，空域管理、气象门槛、运维检修、人员资质与适航认证共同决定整机安全水平。</p>
+<p style="margin-top:10px">未来随着感知可靠性、电池安全与应急兜底手段的提升，配合法规标准与运行体系的完善，载人 eVTOL 才能在可控风险下逐步走向规模化商业运营。</p>
+</div>
+</section>
+<p class="meta">课程作业二 · 飞行汽车全方位安全分析 ｜ 分析对象：小鹏汇天 旅航者 X2</p>
+</div>
+</body>
+</html>
